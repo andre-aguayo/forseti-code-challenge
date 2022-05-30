@@ -9,10 +9,12 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class NewsService implements NewsInterface
 {
-
-    private $errors = [];
-
-    public function importNews(bool $verifySsl = true): array
+    /**
+     * Description: Method used to create investment with name and balance
+     * 
+     * @param bool $verifySsl "Enable SSL verification?"
+     */
+    public function importNews(bool $verifySsl = true)
     {
         for ($i = 0; $i < 5; $i++) {
 
@@ -25,39 +27,61 @@ class NewsService implements NewsInterface
 
             $this->crawlAndStoreNews($html);
         }
-        return $this->errors;
     }
 
+    /**
+     * Description: Method used to list News with paginate
+     *
+     */
     public function getNewsInDatabaseWithPagination()
     {
         return News::paginate(30);
     }
 
+    /**
+     * Description: Method used to crawl HTML and stpre in News table
+     * 
+     * @param string $html "Request DOM"
+     */
     private function crawlAndStoreNews(string $html)
     {
-        $this->errors = [];
-
         ((new Crawler($html))->filter('article.tileItem'))->each(function (Crawler $node) {
             $linkTitle = $node->filter('a.summary'); //get news title
 
             $brlDateFormat = $node->filter('span.summary-view-icon')->text(); //get published date
             $usaFormatDate = $this->convertFormateDate($brlDateFormat); //convert date format
 
-            try {
+            $url = $linkTitle->attr('href');
+
+            if (!$this->verifyNewsAlreadyExists($url))
                 News::create([
                     "title" => $linkTitle->text(),
-                    "url" => $linkTitle->attr('href'),
+                    "url" => $url,
                     "published_in" => $usaFormatDate
                 ]);
-            } catch (Exception $e) {
-                //Define error message
-                $message = $e->getCode() == 23000 ?  "URL already exists: " . $linkTitle->attr('href') : $e->getMessage();
-
-                array_push($this->errors, ["error_message" => $message, "error_code" => $e->getCode()]);
-            }
         });
     }
 
+
+    /**
+     * Description: Method used to verify if news already exists
+     * 
+     * @param string $url "Is url of news"
+     * @return bool "News already exists?"
+     */
+    private function verifyNewsAlreadyExists(string $url): bool
+    {
+        $news = News::where("url", "=", $url)->first();
+
+        return !empty($news);
+    }
+
+    /**
+     * Description: Method used to convert date from 'd/m/Y' to 'Y-m-d'
+     * 
+     * @param string $date "Date it was sold"
+     * @return string "Formatted date"
+     */
     private function convertFormateDate(string $date): string
     {
         $arrayOfDate = explode('/', $date);

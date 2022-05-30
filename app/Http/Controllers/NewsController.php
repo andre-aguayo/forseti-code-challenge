@@ -11,26 +11,32 @@ class NewsController extends Controller
     {
     }
 
+    /**
+     * Description: Method used access a notices page with ssl verification
+     * 
+     */
     public function requestNews()
     {
-        $importNews = $this->news->importNews();
+        $this->news->importNews();
 
-        if ($importNews === true)
-            return response()->json(["success" => true, "jsonData" => []], 200);
-
-        return response()->json(["success" => false, "jsonData" => $importNews], 400);
+        return response()->json(["success" => true], 200);
     }
 
+    /**
+     * Description: Method used access a notices page without ssl verification
+     * 
+     */
     public function requestNewsWithoutVerification()
     {
-        $importNews = $this->news->importNews(false);
+        $this->news->importNews(false);
 
-        if ($importNews === true)
-            return response()->json(["success" => true, "jsonData" => []], 200);
-
-        return response()->json(["success" => false, "jsonData" => $importNews], 400);
+        return response()->json(["success" => true], 200);
     }
 
+    /**
+     * Description: Method used to list news with paginate
+     * 
+     */
     public function shwoListNews()
     {
         return response()->json([
