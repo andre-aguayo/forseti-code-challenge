@@ -3,11 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\News;
-use Exception;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class NewsTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * A basic feature test example.
      *
@@ -15,8 +17,6 @@ class NewsTest extends TestCase
      */
     public function test_create_news()
     {
-        $this->get('/import/without-verification');
-
         News::create(["title" => "title1", "url" => "htps://test.org", "published_in" => date("Y-m-d")]);
         $news1 = News::where("url", "=", "htps://test.org")->first();
 
