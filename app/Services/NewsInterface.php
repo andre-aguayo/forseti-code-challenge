@@ -8,5 +8,5 @@ interface NewsInterface
 {
     public function importNews(bool $verifySsl = true): array;
 
-    public function getNewsInDatabaseWithPagination(): News;
+    public function getNewsInDatabaseWithPagination();
 }

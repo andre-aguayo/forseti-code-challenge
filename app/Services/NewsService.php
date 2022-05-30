@@ -28,7 +28,7 @@ class NewsService implements NewsInterface
         return $this->errors;
     }
 
-    public function getNewsInDatabaseWithPagination(): News
+    public function getNewsInDatabaseWithPagination()
     {
         return News::paginate(30);
     }
@@ -51,7 +51,7 @@ class NewsService implements NewsInterface
                 ]);
             } catch (Exception $e) {
                 //Define error message
-                $message = $e->getCode() == 23000 ?  "URL already exists: $linkTitle->attr('href')" : $e->getMessage();
+                $message = $e->getCode() == 23000 ?  "URL already exists: " . $linkTitle->attr('href') : $e->getMessage();
 
                 array_push($this->errors, ["error_message" => $message, "error_code" => $e->getCode()]);
             }
