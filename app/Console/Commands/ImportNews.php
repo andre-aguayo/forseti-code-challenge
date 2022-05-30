@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\News;
 use App\Services\NewsService;
 use Illuminate\Console\Command;
 
@@ -42,7 +41,7 @@ class ImportNews extends Command
         $this->comment("Importins news... ");
 
         $newService = new NewsService();
-        $newService->importNews();
+        $newService->importNews(false);
 
         $this->info("Import succefull.");
         return 1;
