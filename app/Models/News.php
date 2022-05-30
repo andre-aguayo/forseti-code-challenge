@@ -11,4 +11,6 @@ class News extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ["title", "url", "published_in"];
+
+    protected $hidden = ["id", "created_at", "updated_at", "deleted_at"];
 }
