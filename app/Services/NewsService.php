@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\News;
-use Exception;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
 
